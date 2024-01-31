@@ -23,14 +23,15 @@ public class BottomShooterMotor extends SubsystemBase {
   }
 
   public Command spin() {
-    return runOnce(()->PlutoMotor.set(0.8));
+    return startEnd(()->PlutoMotor.set(1), () -> {});
   }
 
   public Command stop(){
-    return runOnce(()->PlutoMotor.set(0));
+        return startEnd(()->PlutoMotor.set(0), () -> {});
+
   }
 
   public Command intake(){
-    return runOnce(()->PlutoMotor.set(-0.8));
+       return startEnd(()->PlutoMotor.set(-0.4), () -> {});
   }
 }

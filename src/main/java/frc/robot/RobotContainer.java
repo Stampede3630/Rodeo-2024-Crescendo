@@ -58,18 +58,18 @@ public class RobotContainer {
     //Top Shooter Motor intaking a note (one)
       m_driverController.rightTrigger()
         .whileTrue(m_topShooterMotor.intake()
-        .andThen(m_bottomShooterMotor.intake()));
+        .alongWith(m_bottomShooterMotor.intake()));
 
       //Top Shooter Motor shooting a note    
       m_driverController.leftTrigger()
         .whileTrue(m_topShooterMotor.spin()
-        .andThen(Commands.waitSeconds(2)
-        .andThen(m_bottomShooterMotor.spin())));
+        .alongWith(Commands.waitSeconds(2).andThen(m_bottomShooterMotor.spin())));
   }
     
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
 }
 
   /**

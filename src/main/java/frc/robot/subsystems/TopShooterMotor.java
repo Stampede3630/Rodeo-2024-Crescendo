@@ -22,14 +22,17 @@ public class TopShooterMotor extends SubsystemBase {
   }
 
   public Command spin() {
-    return runOnce(()->GoofyMotor.set(0.8));
+    return startEnd(()->GoofyMotor.set(1), ()->{});
   }
 
   public Command stop(){
-    return runOnce(()->GoofyMotor.set(0));
+        return startEnd(()->GoofyMotor.set(0), ()->{});
+
+
   }
 
   public Command intake(){
-    return runOnce(()->GoofyMotor.set(-0.8));
+        return startEnd(()->GoofyMotor.set(-0.8), ()->{});
+
   }
 }
