@@ -13,7 +13,7 @@ public class TopShooterMotor extends SubsystemBase {
   private CANSparkFlex GoofyMotor;
   /** Creates a new TopShooterMotor. */
   public TopShooterMotor() {
-    GoofyMotor = new CANSparkFlex(3, MotorType.kBrushless);
+    GoofyMotor = new CANSparkFlex(1, MotorType.kBrushless);
   }
   
   @Override
