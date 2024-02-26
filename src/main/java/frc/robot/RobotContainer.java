@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -13,13 +14,19 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.TopShooterMotor;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -29,9 +36,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 // top motor: 3
 // bottom motor: 2
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 
@@ -43,54 +53,113 @@ public class RobotContainer {
   private final Climber m_climber = new Climber();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
-  
+  private final CommandXboxController m_driverController = new CommandXboxController(
+      OperatorConstants.kDriverControllerPort);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  private double MaxSpeed = 6; // 6 meters per second desired top speed
+  private double MaxAngularRate = ((2) * Math.PI); // 3/4 of a rotation per second max angular velocity
+
+  /* Setting up bindings for necessary control of the swerve drive platform */
+  // private final CommandXboxController joystick = new CommandXboxController(0);
+  // // My joystick
+  private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+                                                               // driving in open loop
+  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  private final SwerveRequest.FieldCentricFacingAngle faceAngle = new SwerveRequest.FieldCentricFacingAngle();
+  private final Telemetry logger = new Telemetry(MaxSpeed);
+private SendableChooser<Command> autoChooser;
+
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
     m_bottomShooterMotor.setDefaultCommand(m_bottomShooterMotor.stop());
     m_topShooterMotor.setDefaultCommand(m_topShooterMotor.stop());
     m_amp.setDefaultCommand(m_amp.stop());
     m_climber.setDefaultCommand(m_climber.stop());
-    
-    // Configure the trigger bindings
+    NamedCommands.registerCommand("Shoot",m_topShooterMotor.spin()
+            .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotor.spin())));
+
+    // Configure the trigger bindings, 
     configureBindings();
+
+    autoChooser = AutoBuilder.buildAutoChooser();
+
+    // Another option that allows you to specify the default auto by its name
+    // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
+
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * Use this method to define your trigger->command mappings. Triggers can be
+   * created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
+   * an arbitrary
    * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link
+   * CommandXboxController
+   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or
+   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleConditiTrigger(m_exampleSubsystem::exampleCondition)
+    // Schedule `ExampleCommand` when
+    // `exampleConditiTrigger(m_exampleSubsystem::exampleCondition)
 
-    //Top Shooter Motor intaking a note (one)
-      m_driverController.leftTrigger()
+    // Top Shooter Motor intaking a note (one)
+    m_driverController.leftTrigger()
         .whileTrue(m_topShooterMotor.intake()
-        .alongWith(m_bottomShooterMotor.intake()));
+            .alongWith(m_bottomShooterMotor.intake()));
 
-      //Top Shooter Motor shooting a note    
-      m_driverController.rightTrigger()
+    // Top Shooter Motor shooting a note
+    m_driverController.rightTrigger()
         .whileTrue(m_topShooterMotor.spin()
-        .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotor.spin())));
+            .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotor.spin())));
 
-        drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed *.5) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed *.5) // Drive left with negative X (left)
-            .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate *1) // Drive counterclockwise with negative X (left)
+    drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        drivetrain.applyRequest(() -> drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed * .8) // Drive
+                                                                                                          // forward
+                                                                                                          // with
+            // negative Y (forward)
+            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed * .6) // Drive left with negative X (left)
+            .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate * 1) // Drive counterclockwise with
+                                                                                      // negative X (left)
         ));
 
-    //Here are the amp commands
+    m_driverController.rightStick().whileTrue( // face the source
+        drivetrain.applyRequest(() -> faceAngle.withVelocityX(-m_driverController.getLeftY() * MaxSpeed * .5) // Drive
+            // forward
+            // with
+            // negative Y (forward)
+            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed * .5) // Drive left with negative X (left)
+            .withTargetDirection(
+                DriverStation.getAlliance().orElse(Alliance.Red).equals(Alliance.Red) ? Rotation2d.fromDegrees(60)
+                    : Rotation2d.fromDegrees(300)) // Drive counterclockwise with
+        ) // negative X (left)))
+    );
+
+    m_driverController.leftStick().whileTrue( // line up the shot
+        drivetrain.applyRequest(() -> faceAngle.withVelocityX(-m_driverController.getLeftY() * MaxSpeed * .5) // Drive
+            // forward
+            // with
+            // negative Y (forward)
+            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed * .5) // Drive left with negative X (left)
+            .withTargetDirection(Rotation2d.fromDegrees(0)) // Drive counterclockwise with
+        ) // negative X (left)))
+    );
+
+    // Here are the amp commands
     m_driverController.a().whileTrue(m_amp.getNote());
     m_driverController.b().whileTrue(m_amp.scoreNote());
-    //Here are the climber commands
+    // Here are the climber commands
     m_driverController.y().whileTrue(m_climber.extend());
     m_driverController.x().whileTrue(m_climber.retract());
     // reset the field-centric heading on left bumper press
@@ -102,26 +171,8 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
-    private double MaxSpeed = 6; // 6 meters per second desired top speed
-  private double MaxAngularRate = ((2) * Math.PI); // 3/4 of a rotation per second max angular velocity
-
-  /* Setting up bindings for necessary control of the swerve drive platform */
-  // private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
-
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-                                                               // driving in open loop
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final Telemetry logger = new Telemetry(MaxSpeed);
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   * @return the command to run in autonomous
-   */  
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
+  }
 
 }
-
-
