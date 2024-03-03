@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -78,7 +79,7 @@ public class RobotContainer {
     configureBindings();
 
     autoChooser = AutoBuilder.buildAutoChooser();
-
+    faceAngle.HeadingController = new PhoenixPIDController(1, 0, 0);
     // Another option that allows you to specify the default auto by its name
     // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
 
@@ -136,7 +137,7 @@ public class RobotContainer {
             // negative Y (forward)
                     .withVelocityY(-m_driverController.getLeftX() * maxSpeed * .5) // Drive left with negative X (left)
             .withTargetDirection(
-                DriverStation.getAlliance().orElse(Alliance.Red).equals(Alliance.Red) ? Rotation2d.fromDegrees(60)
+                    drivetrain.getCurrentAlliance().equals(Alliance.Red) ? Rotation2d.fromDegrees(60)
                     : Rotation2d.fromDegrees(300)) // Drive counterclockwise with
         ) // negative X (left)))
     );
