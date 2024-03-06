@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5216890220257315,
-        "y": 4.869096333684957
+        "x": 2.45,
+        "y": 5.51
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4176027474237634,
-        "y": 5.336529581718712
+        "x": 2.4809009997616673,
+        "y": 5.472864279061892
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.709748527444861,
-        "y": 2.249522506162451
+        "x": 1.4973435403573065,
+        "y": 5.51
       },
       "prevControl": {
-        "x": 1.709748527444861,
-        "y": 2.249522506162451
-      },
-      "nextControl": {
-        "x": 3.7097485274448654,
-        "y": 2.249522506162451
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 4.170477427550348,
-        "y": 1.431514322103378
-      },
-      "prevControl": {
-        "x": 3.2745637021523173,
-        "y": 1.6068017901160365
+        "x": 1.0006957143214408,
+        "y": 5.482602471729262
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 0.6902771978649963,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "SpeakerPathwGI",
   "previewStartingState": {
-    "rotation": -38.04704253182608,
+    "rotation": 0,
     "velocity": 0
   },
   "useDefaultConstraints": true

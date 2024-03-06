@@ -4,17 +4,18 @@
 
 //import imporms;
 package frc.robot.subsystems;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class BottomShooterMotor extends SubsystemBase {
-  private CANSparkFlex PlutoMotor;
+public class BottomShooterMotorLeft extends SubsystemBase {
+  private TalonFX PlutoMotor;
   /** Creates a new BottomShooterMotor. */
   
-  public BottomShooterMotor() {
-    PlutoMotor = new CANSparkFlex(2, MotorType.kBrushless);
+  public BottomShooterMotorLeft() {
+    PlutoMotor = new TalonFX(17,"rio");
   }
 
   @Override
@@ -23,7 +24,7 @@ public class BottomShooterMotor extends SubsystemBase {
   }
 
   public Command spin() {
-    return startEnd(()->PlutoMotor.set(1), () -> {});
+    return startEnd(()->PlutoMotor.set(0.2), () -> {});
   }
 
   public Command stop(){

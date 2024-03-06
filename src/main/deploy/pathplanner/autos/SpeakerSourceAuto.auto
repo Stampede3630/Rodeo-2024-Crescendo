@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5216890220257315,
-      "y": 5.132027535703945
+      "x": 0.7378161281646471,
+      "y": 4.331878439964183
     },
-    "rotation": 151.52579638992563
+    "rotation": -60.642246457208735
   },
   "command": {
     "type": "sequential",
@@ -20,13 +20,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Example Path"
+            "pathName": "SpeakerSourcePath"
           }
         }
       ]

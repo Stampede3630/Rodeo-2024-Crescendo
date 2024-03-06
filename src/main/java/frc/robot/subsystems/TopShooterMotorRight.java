@@ -4,16 +4,17 @@
 
 //import important commands
 package frc.robot.subsystems;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class TopShooterMotor extends SubsystemBase {
-  private CANSparkFlex GoofyMotor;
+public class TopShooterMotorRight extends SubsystemBase {
+  private CANSparkFlex MinnieMotor;
   /** Creates a new TopShooterMotor. */
-  public TopShooterMotor() {
-    GoofyMotor = new CANSparkFlex(1, MotorType.kBrushless);
+  public TopShooterMotorRight() {
+    MinnieMotor = new CANSparkFlex(1, MotorType.kBrushless);
   }
   
   @Override
@@ -21,18 +22,19 @@ public class TopShooterMotor extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  // -1 so it spins the right way
   public Command spin() {
-    return startEnd(()->GoofyMotor.set(1), ()->{});
+    return startEnd(()->MinnieMotor.set(-0.1), ()->{});
   }
 
   public Command stop(){
-        return startEnd(()->GoofyMotor.set(0), ()->{});
+        return startEnd(()->MinnieMotor.set(0), ()->{});
 
 
   }
 
   public Command intake(){
-        return startEnd(()->GoofyMotor.set(-0.8), ()->{});
+        return startEnd(()->MinnieMotor.set(0.8), ()->{});
 
   }
 }
