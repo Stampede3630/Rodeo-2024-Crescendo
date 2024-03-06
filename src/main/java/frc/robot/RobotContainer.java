@@ -17,11 +17,11 @@ import frc.robot.subsystems.TopShooterMotorLeft;
 import frc.robot.subsystems.TopShooterMotorRight;
 
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -33,6 +33,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.*;
 
 // top motor: 3
 // bottom motor: 2
@@ -55,8 +57,8 @@ public class RobotContainer {
   private final Amp m_amp = new Amp();
   private final Climber m_climber = new Climber();
 
-  private double MaxSpeed = 6; // 6 meters per second desired top speed
-  private double MaxAngularRate = ((2) * Math.PI); // 3/4 of a rotation per second max angular velocity
+  private final double maxSpeed = 6; // 6 meters per second desired top speed
+  private final double maxAngularRate = ((2) * Math.PI); // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   // private final CommandXboxController joystick = new CommandXboxController(0);
@@ -64,13 +66,13 @@ public class RobotContainer {
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+          .withDeadband(maxSpeed * 0.1).withRotationalDeadband(maxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                // driving in open loop
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
   private final SwerveRequest.FieldCentricFacingAngle faceAngle = new SwerveRequest.FieldCentricFacingAngle();
-  private final Telemetry logger = new Telemetry(MaxSpeed);
+  private final Telemetry logger = new Telemetry(maxSpeed);
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
@@ -113,7 +115,7 @@ private SendableChooser<Command> autoChooser;
     configureBindings();
 
     autoChooser = AutoBuilder.buildAutoChooser();
-
+    faceAngle.HeadingController = new PhoenixPIDController(1, 0, 0);
     // Another option that allows you to specify the default auto by its name
     // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
 
@@ -163,23 +165,23 @@ private SendableChooser<Command> autoChooser;
         ));
 
     m_driverController.rightStick().whileTrue( // face the source
-        drivetrain.applyRequest(() -> faceAngle.withVelocityX(-m_driverController.getLeftY() * MaxSpeed * .5) // Drive
+            drivetrain.applyRequest(() -> faceAngle.withVelocityX(-m_driverController.getLeftY() * maxSpeed * .5) // Drive
             // forward
             // with
             // negative Y (forward)
-            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed * .5) // Drive left with negative X (left)
+                    .withVelocityY(-m_driverController.getLeftX() * maxSpeed * .5) // Drive left with negative X (left)
             .withTargetDirection(
-                DriverStation.getAlliance().orElse(Alliance.Red).equals(Alliance.Red) ? Rotation2d.fromDegrees(60)
+                    drivetrain.getCurrentAlliance().equals(Alliance.Red) ? Rotation2d.fromDegrees(60)
                     : Rotation2d.fromDegrees(300)) // Drive counterclockwise with
         ) // negative X (left)))
     );
 
     m_driverController.leftStick().whileTrue( // line up the shot
-        drivetrain.applyRequest(() -> faceAngle.withVelocityX(-m_driverController.getLeftY() * MaxSpeed * .5) // Drive
+            drivetrain.applyRequest(() -> faceAngle.withVelocityX(-m_driverController.getLeftY() * maxSpeed * .5) // Drive
             // forward
             // with
             // negative Y (forward)
-            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed * .5) // Drive left with negative X (left)
+                    .withVelocityY(-m_driverController.getLeftX() * maxSpeed * .5) // Drive left with negative X (left)
             .withTargetDirection(Rotation2d.fromDegrees(0)) // Drive counterclockwise with
         ) // negative X (left)))
     );

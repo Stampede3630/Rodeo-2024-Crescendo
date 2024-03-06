@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.function.Supplier;
-
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -12,7 +10,6 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,6 +19,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.TunerConstants;
+
+import java.util.function.Supplier;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
@@ -37,6 +36,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
     /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
     private final Rotation2d RedAlliancePerspectiveRotation = Rotation2d.fromDegrees(180);
+    private Alliance currentAlliance;
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
@@ -112,10 +112,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         /* This ensures driving behavior doesn't change until an explicit disable event occurs during testing*/
         if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent((allianceColor) -> {
+                currentAlliance = allianceColor;
                 this.setOperatorPerspectiveForward(
                         allianceColor == Alliance.Red ? RedAlliancePerspectiveRotation
                                 : BlueAlliancePerspectiveRotation);
                 hasAppliedOperatorPerspective = true;
             });
         }
-}}
+    }
+
+    public Alliance getCurrentAlliance() {
+        return currentAlliance;
+    }
+}
