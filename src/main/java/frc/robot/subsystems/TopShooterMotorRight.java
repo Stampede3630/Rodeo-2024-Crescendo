@@ -24,6 +24,10 @@ public class TopShooterMotorRight extends SubsystemBase {
 
   // -1 so it spins the right way
   public Command spin() {
+    return startEnd(()->MinnieMotor.set(-1), ()->{});
+  }
+  
+  public Command ampSpin() {
     return startEnd(()->MinnieMotor.set(-0.1), ()->{});
   }
 

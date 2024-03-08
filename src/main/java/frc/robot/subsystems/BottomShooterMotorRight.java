@@ -25,7 +25,11 @@ public class BottomShooterMotorRight extends SubsystemBase {
 
   // -1 so it spins the right way
   public Command spin() {
-    return startEnd(()->GoofyMotor.set(-0.2), () -> {});
+    return startEnd(()->GoofyMotor.set(-1), () -> {});
+  }
+
+  public Command ampSpin() {
+    return startEnd(()->GoofyMotor.set(-0.2), ()->{});
   }
 
   public Command stop(){

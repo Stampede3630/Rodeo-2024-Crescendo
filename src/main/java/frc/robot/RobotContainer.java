@@ -155,12 +155,12 @@ private SendableChooser<Command> autoChooser;
             .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotorRight.spin())));
 
     drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        drivetrain.applyRequest(() -> drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive
+        drivetrain.applyRequest(() -> drive.withVelocityX(-m_driverController.getLeftY() * maxSpeed) // Drive
                                                                                                           // forward
                                                                                                           // with
             // negative Y (forward)
-            .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate * 1) // Drive counterclockwise with
+            .withVelocityY(-m_driverController.getLeftX() * maxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-m_driverController.getRightX() * maxAngularRate * 1) // Drive counterclockwise with
                                                                                       // negative X (left)
         ));
 
@@ -187,8 +187,12 @@ private SendableChooser<Command> autoChooser;
     );
 
     // Here are the amp commands
-    m_driverController.a().whileTrue(m_amp.getNote());
-    m_driverController.b().whileTrue(m_amp.scoreNote());
+    m_driverController.a()
+    .whileTrue(m_topShooterMotorLeft.ampSpin()
+        .alongWith(m_topShooterMotorRight.ampSpin())
+        .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotorLeft.ampSpin()))
+        .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotorRight.ampSpin())));
+
     // Here are the climber commands
     // Here are the climber commands
     m_driverController.y().whileTrue(m_climber.extend());
@@ -198,7 +202,7 @@ private SendableChooser<Command> autoChooser;
     m_driverController.leftBumper().onTrue(drivetrain.runOnce(() ->
     drivetrain.seedFieldRelative()));
 
-
+//     new Trigger(DriverStation.isDisabled()).whileTrue(getAutonomousCommand())
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
