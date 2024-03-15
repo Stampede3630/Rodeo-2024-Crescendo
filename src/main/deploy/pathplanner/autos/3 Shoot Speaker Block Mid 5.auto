@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7419585748262406,
-      "y": 4.384510587202993
+      "x": 0.776493614235756,
+      "y": 6.729882576372926
     },
-    "rotation": 118.92642583525361
+    "rotation": -118.77625022463157
   },
   "command": {
     "type": "sequential",
@@ -26,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue 1 Shoot Speaker Block Mid 5"
+            "pathName": "3 Shoot Speaker Block Mid 5"
           }
         }
       ]

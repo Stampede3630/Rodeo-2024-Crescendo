@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.759954525275777,
-      "y": 6.726042503963363
+      "x": 1.3949707899415797,
+      "y": 5.550603828480384
     },
-    "rotation": -60.255118703057796
+    "rotation": -179.04515874612804
   },
   "command": {
     "type": "sequential",
@@ -26,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Red 3 Shoot Speaker Block Mid 5"
+            "pathName": "2 Shoot Speaker To Cross Line"
           }
         }
       ]

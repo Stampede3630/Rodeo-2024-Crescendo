@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7326298288960215,
-      "y": 4.393839333133212
+      "x": 0.7139723370355832,
+      "y": 6.707368323827557
     },
-    "rotation": 119.57783868126134
+    "rotation": -119.44542872992558
   },
   "command": {
     "type": "sequential",
@@ -26,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue 1 Shoot Speaker To Cross Lin3"
+            "pathName": "3 Shoot Speaker To Cross Line"
           }
         }
       ]
