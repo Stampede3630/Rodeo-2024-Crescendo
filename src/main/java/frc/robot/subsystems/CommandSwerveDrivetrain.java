@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.TunerConstants;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -91,11 +92,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                                             driveBaseRadius,
                                             new ReplanningConfig()),
             ()-> {
-                var alliance =DriverStation.getAlliance();
-                if (alliance.isPresent()) {
-                    return alliance.get() == DriverStation.Alliance.Red;
-                }
-                return false;
+               Optional<Alliance> alliance = DriverStation.getAlliance();
+               return alliance.filter(value -> value == Alliance.Red).isPresent();
             }, // Change this if the path needs to be flipped on red vs blue
             this); // Subsystem for requirements
     }
