@@ -28,7 +28,7 @@ public class BottomShooterMotorLeft extends SubsystemBase {
   }
   
   public Command ampSpin() {
-    return startEnd(()->PlutoMotor.set(0.2), ()->{});
+    return startEnd(()->PlutoMotor.set(0.3), ()->{});
   }
 
   public Command stop(){

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.7378161281646471,
-      "y": 4.331878439964183
+      "x": 0.7326298288960215,
+      "y": 4.393839333133212
     },
-    "rotation": -60.642246457208735
+    "rotation": 119.57783868126134
   },
   "command": {
     "type": "sequential",
@@ -20,13 +20,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SpeakerSourcePath"
+            "pathName": "Blue 1 Shoot Speaker To Cross Lin3"
           }
         }
       ]

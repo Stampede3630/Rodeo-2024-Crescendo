@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3759946483379424,
-      "y": 5.424517421473006
+      "x": 15.877439983856297,
+      "y": 6.755413868612929
     },
-    "rotation": -3.918248864067425
+    "rotation": -59.036243467742125
   },
   "command": {
     "type": "sequential",
@@ -20,13 +20,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SpeakerPath"
+            "pathName": "Red 3 Shoot Speaker To Cross Line"
           }
         }
       ]

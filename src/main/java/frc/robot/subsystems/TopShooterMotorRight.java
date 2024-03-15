@@ -28,7 +28,7 @@ public class TopShooterMotorRight extends SubsystemBase {
   }
   
   public Command ampSpin() {
-    return startEnd(()->MinnieMotor.set(-0.1), ()->{});
+    return startEnd(()->MinnieMotor.set(-0.096), ()->{});
   }
 
   public Command stop(){
@@ -38,7 +38,7 @@ public class TopShooterMotorRight extends SubsystemBase {
   }
 
   public Command intake(){
-        return startEnd(()->MinnieMotor.set(0.8), ()->{});
+        return startEnd(()->MinnieMotor.set(0.1), ()->{});
 
   }
 }

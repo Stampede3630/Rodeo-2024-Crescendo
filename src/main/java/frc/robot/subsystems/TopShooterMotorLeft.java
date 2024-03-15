@@ -26,7 +26,7 @@ public class TopShooterMotorLeft extends SubsystemBase {
   }
 
   public Command ampSpin() {
-    return startEnd(()->MickeyMotor.set(0.1), ()->{});
+    return startEnd(()->MickeyMotor.set(0.096), ()->{});
   }
 
   public Command stop(){

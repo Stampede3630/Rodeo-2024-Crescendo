@@ -105,10 +105,27 @@ private SendableChooser<Command> autoChooser;
     m_bottomShooterMotorRight.setDefaultCommand(m_bottomShooterMotorRight.stop());
     m_amp.setDefaultCommand(m_amp.stop());
     m_climber.setDefaultCommand(m_climber.stop());
-    NamedCommands.registerCommand("Shoot",m_topShooterMotorLeft.spin()
+    NamedCommands.registerCommand("Shoot",
+        Commands.parallel(
+                m_topShooterMotorLeft.spin(),
+                m_topShooterMotorRight.spin()
+        ).withTimeout(.9)
+        .andThen(Commands.parallel(
+                 m_bottomShooterMotorLeft.spin(),
+                m_bottomShooterMotorRight.spin())
+        ).withTimeout(1)
+        .andThen(Commands.parallel(
+                m_topShooterMotorLeft.stop(),
+                m_topShooterMotorRight.stop(),
+                m_bottomShooterMotorLeft.stop(),
+                m_bottomShooterMotorRight.stop()).withTimeout(.2)));
+                
+    
+    
+    m_topShooterMotorLeft.spin()
             .alongWith(m_topShooterMotorRight.spin())
             .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotorLeft.spin()))
-            .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotorRight.spin())));
+            .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotorRight.spin()));
 
 
     // Configure the trigger bindings, 
@@ -187,7 +204,7 @@ private SendableChooser<Command> autoChooser;
     );
 
     // Here are the amp commands
-    m_driverController.a()
+    m_driverController.rightBumper()
     .whileTrue(m_topShooterMotorLeft.ampSpin()
         .alongWith(m_topShooterMotorRight.ampSpin())
         .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotorLeft.ampSpin()))
@@ -195,8 +212,8 @@ private SendableChooser<Command> autoChooser;
 
     // Here are the climber commands
     // Here are the climber commands
-    m_driverController.y().whileTrue(m_climber.extend());
-    m_driverController.x().whileTrue(m_climber.retract());
+    m_driverController.x().whileTrue(m_climber.extend());
+    m_driverController.y().whileTrue(m_climber.retract());
 
     // reset the field-centric heading on left bumper press
     m_driverController.leftBumper().onTrue(drivetrain.runOnce(() ->
