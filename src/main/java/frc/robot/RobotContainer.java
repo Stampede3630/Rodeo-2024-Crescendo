@@ -110,23 +110,25 @@ private SendableChooser<Command> autoChooser;
         Commands.parallel(
                 m_topShooterMotorLeft.spin(),
                 m_topShooterMotorRight.spin()
-        ).withTimeout(.9)
+        ).withTimeout(2)
         .andThen(Commands.parallel(
                  m_bottomShooterMotorLeft.spin(),
                 m_bottomShooterMotorRight.spin())
-        ).withTimeout(1)
+          .withTimeout(2)
+        )
         .andThen(Commands.parallel(
                 m_topShooterMotorLeft.stop(),
                 m_topShooterMotorRight.stop(),
                 m_bottomShooterMotorLeft.stop(),
-                m_bottomShooterMotorRight.stop()).withTimeout(.2)));
+                m_bottomShooterMotorRight.stop()).withTimeout(.2)
+                ));
                 
     
     
-    m_topShooterMotorLeft.spin()
-            .alongWith(m_topShooterMotorRight.spin())
-            .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotorLeft.spin()))
-            .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotorRight.spin()));
+    // m_topShooterMotorLeft.spin()
+    //         .alongWith(m_topShooterMotorRight.spin())
+    //         .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotorLeft.spin()))
+    //         .alongWith(Commands.waitSeconds(0.5).andThen(m_bottomShooterMotorRight.spin()));
 
 
     // Configure the trigger bindings, 
@@ -217,7 +219,7 @@ private SendableChooser<Command> autoChooser;
     m_driverController.y().whileTrue(m_climber.retract());
 
     // reset the field-centric heading on left bumper press
-    m_driverController.leftBumper().onTrue(drivetrain.runOnce(() ->
+    m_driverController.b().onTrue(drivetrain.runOnce(() ->
     drivetrain.seedFieldRelative()));
 
 //     new Trigger(DriverStation.isDisabled()).whileTrue(getAutonomousCommand())

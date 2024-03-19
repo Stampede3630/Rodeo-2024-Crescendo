@@ -10,9 +10,22 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
+        }
+      ]
     }
   },
-  "folder": null,
+  "folder": "All the Autos",
   "choreoAuto": false
 }

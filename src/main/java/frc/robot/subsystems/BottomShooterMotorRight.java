@@ -29,7 +29,7 @@ public class BottomShooterMotorRight extends SubsystemBase {
   }
 
   public Command ampSpin() {
-    return startEnd(()->GoofyMotor.set(-0.3), ()->{});
+    return startEnd(()->GoofyMotor.set(-0.8), ()->{});
   }
 
   public Command stop(){

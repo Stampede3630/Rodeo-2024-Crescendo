@@ -30,7 +30,7 @@ public class LEDs extends SubsystemBase {
     }
 
     private LEDs() {
-        this(0, 100);
+        this(0, 10);
     }
 
     public static LEDs getInstance() {
